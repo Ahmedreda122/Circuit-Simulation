@@ -19,18 +19,41 @@ endmodule
 
 module TwoxOneMUX(output res, input D0, input D1, input S);
     wire res1, res2;
-    and(res1, D0, ~S);
-    and(res2, D1, S);
+    and(res1, D0, ~S); //0
+    and(res2, D1, S); // 1
     or(res, res1, res2);
 endmodule
 
-module FourxOneMUX(output res, input D0, input D1, input D2, input D3, input S1, input S2);
+module FourxOneMUX(output res, input D0, input D1, input D2, input D3, input S0, input S1);
     wire res1, res2, res3, res4;
-    and(res1, D0, ~S1, ~S2); // 0 0
-    and(res2, D1, S1, ~S2); //  0 1
-    and(res3, D2, ~S1, S2); //  1 0
-    and(res4, D3, S1, S2); //   1 1
+    and(res1, D0, ~S0, ~S1); // 0 0
+    and(res2, D1, S0, ~S1); //  0 1
+    and(res3, D2, ~S0, S1); //  1 0
+    and(res4, D3, S0, S1); //   1 1
     or(res, res1, res2, res3, res4);
+endmodule
+
+
+module mainCircuit(output[2:0] G, output carry, input[2:0] A, input[2:0] B, input S0, input S1);
+    wire mux1Output, mux2Output, mux3Output, mux4Output, mux5Output, mux6Output;
+    wire xor1Output, xor2Ouput, xor3Ouput; 
+    wire c1, c2;
+    FourxOneMUX mux1(mux1Output, A[0], A[0], A[0], B[0], S0, S1);
+    assign xor1Output = S1 ^ mux1Output;
+
+    FourxOneMUX mux2(mux2Output, A[1], A[1], A[1], B[1], S0, S1);
+    assign xor2Output = S1 ^ mux2Output;
+
+    FourxOneMUX mux3(mux3Output, A[2], A[2], A[2], B[2], S0, S1);
+    assign xor3Output = S1 ^ mux3Output;
+    
+    FourxOneMUX mux4(mux4Output, 1'b1, B[0], B[0], 1'b1, S0, S1);
+    FourxOneMUX mux5(mux5Output, 1'b0, B[1], B[1], 1'b0, S0, S1);
+    FourxOneMUX mux6(mux6Output, 1'b0, B[2], B[2], 1'b0, S0, S1);
+    //(output sum, output carry, input x, input y, input z);
+    full_adder f1(G[0], c1, xor1Output, mux4Output, S1);
+    full_adder f2(G[1], c2, xor2Output, mux5Output, c1);
+    full_adder f3(G[2], carry, xor3Output, mux6Output, c2);
 endmodule
 
 // module three_bit_adder_tb;
@@ -71,50 +94,110 @@ endmodule
 //     end
 // endmodule
 
-module FourxOneMUX_tb;
+// module FourxOneMUX_tb;
+
+//     // Inputs
+//     reg D0, D1, D2, D3, S1, S2;
+    
+//     // Output
+//     wire res;
+
+//     // Instantiate the FourxOneMUX module
+//     FourxOneMUX uut(
+//         .res(res),
+//         .D0(D0),
+//         .D1(D1),
+//         .D2(D2),
+//         .D3(D3),
+//         .S1(S1),
+//         .S2(S2)
+//     );
+
+//     // Stimulus
+//     initial begin
+//         // Test case 1: S1=0, S2=0 (selecting D0)
+//         D0 = 1'b1; D1 = 1'b0; D2 = 1'b0; D3 = 1'b0; S1 = 1'b0; S2 = 1'b0;
+//         #10; // Wait for some time
+//         $display("Output res: %b", res);
+
+//         // Test case 2: S1=1, S2=0 (selecting D1)
+//         D0 = 1'b0; D1 = 1'b1; D2 = 1'b0; D3 = 1'b0; S1 = 1'b1; S2 = 1'b0;
+//         #10; // Wait for some time
+//         $display("Output res: %b", res);
+
+//         // Test case 3: S1=0, S2=1 (selecting D2)
+//         D0 = 1'b0; D1 = 1'b0; D2 = 1'b1; D3 = 1'b0; S1 = 1'b0; S2 = 1'b1;
+//         #10; // Wait for some time
+//         $display("Output res: %b", res);
+
+//         // Test case 4: S1=1, S2=1 (selecting D3)
+//         D0 = 1'b0; D1 = 1'b0; D2 = 1'b0; D3 = 1'b1; S1 = 1'b1; S2 = 1'b1;
+//         #10; // Wait for some time
+//         $display("Output res: %b", res);
+
+//         // Add more test cases here...
+        
+//         // End simulation
+//         $finish;
+//     end
+// endmodule
+
+`timescale 1ns/1ps
+
+module testbench;
 
     // Inputs
-    reg D0, D1, D2, D3, S1, S2;
-    
-    // Output
-    wire res;
+    reg [2:0] A;
+    reg [2:0] B;
+    reg S0, S1;
 
-    // Instantiate the FourxOneMUX module
-    FourxOneMUX uut(
-        .res(res),
-        .D0(D0),
-        .D1(D1),
-        .D2(D2),
-        .D3(D3),
-        .S1(S1),
-        .S2(S2)
+    // Outputs
+    wire [2:0] G;
+    wire carry;
+
+    // Instantiate the mainCircuit module
+    mainCircuit dut (
+        .G(G),
+        .carry(carry),
+        .A(A),
+        .B(B),
+        .S0(S0),
+        .S1(S1)
     );
 
-    // Stimulus
+    // Clock generation
+    reg clk = 0;
+    always #5 clk = ~clk;
+
+    // Test stimulus
     initial begin
-        // Test case 1: S1=0, S2=0 (selecting D0)
-        D0 = 1'b1; D1 = 1'b0; D2 = 1'b0; D3 = 1'b0; S1 = 1'b0; S2 = 1'b0;
-        #10; // Wait for some time
-        $display("Output res: %b", res);
+        $display("Testing mainCircuit module");
+        $display("-------------------------");
 
-        // Test case 2: S1=1, S2=0 (selecting D1)
-        D0 = 1'b0; D1 = 1'b1; D2 = 1'b0; D3 = 1'b0; S1 = 1'b1; S2 = 1'b0;
-        #10; // Wait for some time
-        $display("Output res: %b", res);
+        // Loop for different test cases
+        repeat(8) begin
+            // Assign test values to inputs A and B
+            A = $random;
+            B = $random;
+            S0 = $random;
+            S1 = $random;
 
-        // Test case 3: S1=0, S2=1 (selecting D2)
-        D0 = 1'b0; D1 = 1'b0; D2 = 1'b1; D3 = 1'b0; S1 = 1'b0; S2 = 1'b1;
-        #10; // Wait for some time
-        $display("Output res: %b", res);
+            // Display input values
+            $display("Input: A = %b, B = %b, S1 = %b, S0 = %b", A, B, S1, S0);
 
-        // Test case 4: S1=1, S2=1 (selecting D3)
-        D0 = 1'b0; D1 = 1'b0; D2 = 1'b0; D3 = 1'b1; S1 = 1'b1; S2 = 1'b1;
-        #10; // Wait for some time
-        $display("Output res: %b", res);
+            // Apply inputs
+            #1;
 
-        // Add more test cases here...
-        
+            // Display output values
+            $display("Output: G = %b, Carry = %b", G, carry);
+            $display("-------------------------");
+
+            // Wait before next test case
+            #10;
+        end
+
         // End simulation
         $finish;
     end
+
 endmodule
