@@ -25,7 +25,7 @@ The output G is determined based on the selection inputs S1 and S0 as follows:
 
 - When Selection Inputs are 01 (S1=0, S0=1):
 
-  - G = B + A
+  - G = A + B
 
 - When Selection Inputs are 10 (S1=1, S0=0):
 
