@@ -1,0 +1,104 @@
+module half_adder(output sum, output carry, input a, input b);
+    xor(sum, a, b);
+    and(carry, a, b);
+endmodule
+
+module full_adder(output sum, output carry, input x, input y, input z);
+    wire s1, c1, c2;
+    half_adder h1(s1, c1, x, y);
+    half_adder h2(sum, c2, s1, z);
+    or(carry, c1, c2);
+endmodule
+
+module three_bit_adder(output[2:0] result, output carry, input[2:0] x, input[2:0] y);
+    wire s1, c1, s2, c2;
+    full_adder f1(result[0], c1, x[0], y[0], 1'b0);
+    full_adder f2(result[1], c2, x[1], y[1], c1);
+    full_adder f3(result[2], carry, x[2], y[2], c2);
+endmodule
+
+// module three_bit_adder_tb;
+
+//     // Inputs
+//     reg [2:0] x, y;
+    
+//     // Outputs
+//     wire [2:0] result;
+//     wire carry;
+
+//     // Instantiate the three_bit_adder module
+//     three_bit_adder adder(result,carry,x,y);
+
+//     // Stimulus
+//     initial 
+//     begin
+//         // Test case 1: x = 3'b001, y = 3'b010 (1 + 2)
+//         x = 3'b001; // 001
+//         y = 3'b010; // 010
+//         #10; // Wait for some time
+        
+//         // Display output result and carry
+//         $display("Result: %b, Carry: %b", result, carry);
+
+//         // Test case 2: x = 3'b111, y = 3'b001 (7 + 1)
+//         x = 3'b111;
+//         y = 3'b001;
+//         #10; // Wait for some time
+        
+//         // Display output result and carry
+//         $display("Result: %b, Carry: %b", result, carry);
+
+//         // Add more test cases here...
+        
+//         // End simulation
+//         $finish;
+//     end
+// endmodule
+
+// module FourxOneMUX_tb;
+
+//     // Inputs
+//     reg D0, D1, D2, D3, S1, S2;
+    
+//     // Output
+//     wire res;
+
+//     // Instantiate the FourxOneMUX module
+//     FourxOneMUX uut(
+//         .res(res),
+//         .D0(D0),
+//         .D1(D1),
+//         .D2(D2),
+//         .D3(D3),
+//         .S1(S1),
+//         .S2(S2)
+//     );
+
+//     // Stimulus
+//     initial begin
+//         // Test case 1: S1=0, S2=0 (selecting D0)
+//         D0 = 1'b1; D1 = 1'b0; D2 = 1'b0; D3 = 1'b0; S1 = 1'b0; S2 = 1'b0;
+//         #10; // Wait for some time
+//         $display("Output res: %b", res);
+
+//         // Test case 2: S1=1, S2=0 (selecting D1)
+//         D0 = 1'b0; D1 = 1'b1; D2 = 1'b0; D3 = 1'b0; S1 = 1'b1; S2 = 1'b0;
+//         #10; // Wait for some time
+//         $display("Output res: %b", res);
+
+//         // Test case 3: S1=0, S2=1 (selecting D2)
+//         D0 = 1'b0; D1 = 1'b0; D2 = 1'b1; D3 = 1'b0; S1 = 1'b0; S2 = 1'b1;
+//         #10; // Wait for some time
+//         $display("Output res: %b", res);
+
+//         // Test case 4: S1=1, S2=1 (selecting D3)
+//         D0 = 1'b0; D1 = 1'b0; D2 = 1'b0; D3 = 1'b1; S1 = 1'b1; S2 = 1'b1;
+//         #10; // Wait for some time
+//         $display("Output res: %b", res);
+
+//         // Add more test cases here...
+        
+//         // End simulation
+//         $finish;
+//     end
+// endmodule

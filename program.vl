@@ -1,23 +1,27 @@
+// We've Used 12 Component as following => Six 4x1 multiplexers, Three xor gates, Three full adders
+
+// Half Adder (Adding one bit to another) and Returning the sum of them and the carry
 module half_adder(output sum, output carry, input a, input b);
+    // First Adding a & b by xoring them and store the result in "sum" as an output
     xor(sum, a, b);
+    // Second Calculate the carry of adding a to b and the store the result in "carry" as an output
     and(carry, a, b);
 endmodule
 
+// FullAdder: Adding three bits and returing the result as "sum" and "carry"
 module full_adder(output sum, output carry, input x, input y, input z);
+    // Wires to transfer values from one component to another
     wire s1, c1, c2;
+    // First, Add x and y using half adder the store the summation and carry in "s1" & "c1" respectively
     half_adder h1(s1, c1, x, y);
+    // Second, Add s1(result of adding x & y) to z using half adder the store the summation and carry in "sum"(as an output) & "c2" respectively
     half_adder h2(sum, c2, s1, z);
+    // Lastly, Calculate the carry of adding x ,y and z by ORing c1 & c2 and store the result in "carry" as an output
     or(carry, c1, c2);
 endmodule
 
-module three_bit_adder(output[2:0] result, output carry, input[2:0] x, input[2:0] y);
-    wire s1, c1, s2, c2;
-    full_adder f1(result[0], c1, x[0], y[0], 1'b0);
-    full_adder f2(result[1], c2, x[1], y[1], c1);
-    full_adder f3(result[2], carry, x[2], y[2], c2);
-endmodule
-
 module TwoxOneMUX(output res, input D0, input D1, input S);
+// Wires to transfer values from one component to another
     wire res1, res2;
     and(res1, D0, ~S); //0
     and(res2, D1, S); // 1
@@ -25,6 +29,7 @@ module TwoxOneMUX(output res, input D0, input D1, input S);
 endmodule
 
 module FourxOneMUX(output res, input D0, input D1, input D2, input D3, input S0, input S1);
+// Wires to transfer values from one component to another
     wire res1, res2, res3, res4;
     and(res1, D0, ~S0, ~S1); // 0 0
     and(res2, D1, S0, ~S1); //  0 1
@@ -33,11 +38,17 @@ module FourxOneMUX(output res, input D0, input D1, input D2, input D3, input S0,
     or(res, res1, res2, res3, res4);
 endmodule
 
-
-module mainCircuit(output[2:0] G, output carry, input[2:0] A, input[2:0] B, input S0, input S1);
+// The Main Circuit which take the G as 3 bit output and provide a carry
+// Takes A, B which is 3 bit signed numbers, S0, S1 the selectors to operations
+module mainCircuit(output signed[2:0] G, output carry, input signed[2:0] A, input signed[2:0] B, input S0, input S1);
+    // Wires to transfer values from one component to another
     wire mux1Output, mux2Output, mux3Output, mux4Output, mux5Output, mux6Output;
     wire xor1Output, xor2Ouput, xor3Ouput; 
     wire c1, c2;
+
+    // First We Choose From A[0] and B[0] depending on the selectors
+    // if S0 & S1 are equal to 1 then outputs B[0] which is the first bit of 'B', Otherwise outputs A[0] 
+    // Then store that output in mux1Output
     FourxOneMUX mux1(mux1Output, A[0], A[0], A[0], B[0], S0, S1);
     assign xor1Output = S1 ^ mux1Output;
 
@@ -55,92 +66,6 @@ module mainCircuit(output[2:0] G, output carry, input[2:0] A, input[2:0] B, inpu
     full_adder f2(G[1], c2, xor2Output, mux5Output, c1);
     full_adder f3(G[2], carry, xor3Output, mux6Output, c2);
 endmodule
-
-// module three_bit_adder_tb;
-
-//     // Inputs
-//     reg [2:0] x, y;
-    
-//     // Outputs
-//     wire [2:0] result;
-//     wire carry;
-
-//     // Instantiate the three_bit_adder module
-//     three_bit_adder adder(result,carry,x,y);
-
-//     // Stimulus
-//     initial 
-//     begin
-//         // Test case 1: x = 3'b001, y = 3'b010 (1 + 2)
-//         x = 3'b001; // 001
-//         y = 3'b010; // 010
-//         #10; // Wait for some time
-        
-//         // Display output result and carry
-//         $display("Result: %b, Carry: %b", result, carry);
-
-//         // Test case 2: x = 3'b111, y = 3'b001 (7 + 1)
-//         x = 3'b111;
-//         y = 3'b001;
-//         #10; // Wait for some time
-        
-//         // Display output result and carry
-//         $display("Result: %b, Carry: %b", result, carry);
-
-//         // Add more test cases here...
-        
-//         // End simulation
-//         $finish;
-//     end
-// endmodule
-
-// module FourxOneMUX_tb;
-
-//     // Inputs
-//     reg D0, D1, D2, D3, S1, S2;
-    
-//     // Output
-//     wire res;
-
-//     // Instantiate the FourxOneMUX module
-//     FourxOneMUX uut(
-//         .res(res),
-//         .D0(D0),
-//         .D1(D1),
-//         .D2(D2),
-//         .D3(D3),
-//         .S1(S1),
-//         .S2(S2)
-//     );
-
-//     // Stimulus
-//     initial begin
-//         // Test case 1: S1=0, S2=0 (selecting D0)
-//         D0 = 1'b1; D1 = 1'b0; D2 = 1'b0; D3 = 1'b0; S1 = 1'b0; S2 = 1'b0;
-//         #10; // Wait for some time
-//         $display("Output res: %b", res);
-
-//         // Test case 2: S1=1, S2=0 (selecting D1)
-//         D0 = 1'b0; D1 = 1'b1; D2 = 1'b0; D3 = 1'b0; S1 = 1'b1; S2 = 1'b0;
-//         #10; // Wait for some time
-//         $display("Output res: %b", res);
-
-//         // Test case 3: S1=0, S2=1 (selecting D2)
-//         D0 = 1'b0; D1 = 1'b0; D2 = 1'b1; D3 = 1'b0; S1 = 1'b0; S2 = 1'b1;
-//         #10; // Wait for some time
-//         $display("Output res: %b", res);
-
-//         // Test case 4: S1=1, S2=1 (selecting D3)
-//         D0 = 1'b0; D1 = 1'b0; D2 = 1'b0; D3 = 1'b1; S1 = 1'b1; S2 = 1'b1;
-//         #10; // Wait for some time
-//         $display("Output res: %b", res);
-
-//         // Add more test cases here...
-        
-//         // End simulation
-//         $finish;
-//     end
-// endmodule
 
 `timescale 1ns/1ps
 
@@ -175,7 +100,7 @@ module testbench;
         $display("-------------------------");
 
         // Loop for different test cases
-        repeat(8) begin
+        repeat(40) begin
             // Assign test values to inputs A and B
             A = $random;
             B = $random;
@@ -195,7 +120,6 @@ module testbench;
             // Wait before next test case
             #10;
         end
-
         // End simulation
         $finish;
     end
