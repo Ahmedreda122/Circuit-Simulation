@@ -17,6 +17,14 @@ module three_bit_adder(output[2:0] result, output carry, input[2:0] x, input[2:0
     full_adder f3(result[2], carry, x[2], y[2], c2);
 endmodule
 
+module TwoxOneMUX(output res, input D0, input D1, input S);
+// Wires to transfer values from one component to another
+    wire res1, res2;
+    and(res1, D0, ~S); //0
+    and(res2, D1, S); // 1
+    or(res, res1, res2);
+endmodule
+
 // module three_bit_adder_tb;
 
 //     // Inputs

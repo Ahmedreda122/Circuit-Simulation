@@ -20,14 +20,6 @@ module full_adder(output sum, output carry, input x, input y, input z);
     or(carry, c1, c2);
 endmodule
 
-module TwoxOneMUX(output res, input D0, input D1, input S);
-// Wires to transfer values from one component to another
-    wire res1, res2;
-    and(res1, D0, ~S); //0
-    and(res2, D1, S); // 1
-    or(res, res1, res2);
-endmodule
-
 module FourxOneMUX(output res, input D0, input D1, input D2, input D3, input S0, input S1);
 // Wires to transfer values from one component to another
     wire res1, res2, res3, res4;
@@ -123,5 +115,4 @@ module testbench;
         // End simulation
         $finish;
     end
-
 endmodule
