@@ -90,7 +90,9 @@ module testbench;
         $display("Testing mainCircuit module");
         $display("-------------------------");
         
-        // Test Case 1
+        // Test Case 1: A = 000, B = 000, S1 = 0, S0 = 0
+        // Testing when both A and B are zero and S0 = 0, S1 = 0
+        // Expected output: G = 000, Carry = 0
         A = 3'b000;
         B = 3'b000;
         S0 = 1'b0;
@@ -100,7 +102,9 @@ module testbench;
         $display("Output: G = %b, Carry = %b", G, carry);
         $display("-------------------------");
         
-        // Test Case 2
+        // Test Case 2: A = 000, B = 001, S1 = 0, S0 = 0
+        // Testing when A is zero, B is non-zero, and S0 = 0, S1 = 0
+        // Expected output: G = 001, Carry = 0
         A = 3'b000;
         B = 3'b001;
         S0 = 1'b0;
@@ -110,7 +114,9 @@ module testbench;
         $display("Output: G = %b, Carry = %b", G, carry);
         $display("-------------------------");
         
-        // Test Case 3
+        // Test Case 3: A = 000, B = 010, S1 = 0, S0 = 0
+        // Testing when A is zero, B is non-zero, and S0 = 0, S1 = 0
+        // Expected output: G = 010, Carry = 0
         A = 3'b000;
         B = 3'b010;
         S0 = 1'b0;
@@ -120,7 +126,9 @@ module testbench;
         $display("Output: G = %b, Carry = %b", G, carry);
         $display("-------------------------");
         
-        // Test Case 4
+        // Test Case 4: A = 000, B = 011, S1 = 0, S0 = 0
+        // Testing when A is zero, B is non-zero, and S0 = 0, S1 = 0
+        // Expected output: G = 011, Carry = 0
         A = 3'b000;
         B = 3'b011;
         S0 = 1'b0;
@@ -130,7 +138,9 @@ module testbench;
         $display("Output: G = %b, Carry = %b", G, carry);
         $display("-------------------------");
         
-        // Test Case 5
+        // Test Case 5: A = 000, B = 100, S1 = 0, S0 = 0
+        // Testing when A is zero, B is non-zero, and S0 = 0, S1 = 0
+        // Expected output: G = 100, Carry = 0
         A = 3'b000;
         B = 3'b100;
         S0 = 1'b0;
@@ -140,7 +150,9 @@ module testbench;
         $display("Output: G = %b, Carry = %b", G, carry);
         $display("-------------------------");
         
-        // Test Case 6
+        // Test Case 6: A = 000, B = 101, S1 = 0, S0 = 0
+        // Testing when A is zero, B is non-zero, and S0 = 0, S1 = 0
+        // Expected output: G = 101, Carry = 0
         A = 3'b000;
         B = 3'b101;
         S0 = 1'b0;
@@ -150,7 +162,9 @@ module testbench;
         $display("Output: G = %b, Carry = %b", G, carry);
         $display("-------------------------");
         
-        // Test Case 7
+        // Test Case 7: A = 001, B = 000, S1 = 0, S0 = 0
+        // Testing when A is non-zero, B is zero, and S0 = 0, S1 = 0
+        // Expected output: G = 001, Carry = 0
         A = 3'b001;
         B = 3'b000;
         S0 = 1'b0;
@@ -160,7 +174,9 @@ module testbench;
         $display("Output: G = %b, Carry = %b", G, carry);
         $display("-------------------------");
         
-        // Test Case 8
+        // Test Case 8: A = 001, B = 001, S1 = 0, S0 = 0 
+        // Testing when both A and B are non-zero, and S0 = 0, S1 = 0
+        // Expected output: G = 010, Carry = 0
         A = 3'b001;
         B = 3'b001;
         S0 = 1'b0;
@@ -170,7 +186,9 @@ module testbench;
         $display("Output: G = %b, Carry = %b", G, carry);
         $display("-------------------------");
         
-        // Test Case 9
+        // Test Case 9: A = 001, B = 010, S1 = 0, S0 = 0
+        // Testing when both A and B are non-zero, and S0 = 0, S1 = 0
+        // Expected output: G = 011, Carry = 0
         A = 3'b001;
         B = 3'b010;
         S0 = 1'b0;
@@ -180,7 +198,9 @@ module testbench;
         $display("Output: G = %b, Carry = %b", G, carry);
         $display("-------------------------");
         
-        // Test Case 10
+        // Test Case 10: A = 001, B = 011, S1 = 1, S0 = 0
+        // Testing when both A and B are non-zero, and S0 = 0, S1 = 1
+        // Expected output: G = 100, Carry = 1
         A = 3'b001;
         B = 3'b011;
         S0 = 1'b1;
@@ -190,7 +210,9 @@ module testbench;
         $display("Output: G = %b, Carry = %b", G, carry);
         $display("-------------------------");
         
-        // Test Case 11
+        // Test Case 11: Adding two zeros with S0=1, S1=0
+        // Both A and B are zero, S0 = 1, S1 = 0
+        // Expected output: G = 000, Carry = 0
         A = 3'b000;
         B = 3'b000;
         S0 = 1'b1;
@@ -200,7 +222,9 @@ module testbench;
         $display("Output: G = %b, Carry = %b", G, carry);
         $display("-------------------------");
         
-        // Test Case 12
+        // Test Case 12: Adding zero and one with S0=1, S1=0
+        // A is zero, B is non-zero, S0 = 1, S1 = 0
+        // Expected output: G = 001, Carry = 0
         A = 3'b000;
         B = 3'b001;
         S0 = 1'b1;
@@ -210,7 +234,9 @@ module testbench;
         $display("Output: G = %b, Carry = %b", G, carry);
         $display("-------------------------");
         
-        // Test Case 13
+        // Test Case 13: Adding zero and two with S0=1, S1=0
+        // A is zero, B is non-zero, S0 = 1, S1 = 0
+        // Expected output: G = 010, Carry = 0
         A = 3'b000;
         B = 3'b010;
         S0 = 1'b1;
@@ -220,7 +246,9 @@ module testbench;
         $display("Output: G = %b, Carry = %b", G, carry);
         $display("-------------------------");
         
-        // Test Case 14
+        // Test Case 14: Adding zero and three with S0=1, S1=0
+        // A is zero, B is non-zero, S0 = 1, S1 = 0
+        // Expected output: G = 011, Carry = 0
         A = 3'b000;
         B = 3'b011;
         S0 = 1'b1;
@@ -230,7 +258,9 @@ module testbench;
         $display("Output: G = %b, Carry = %b", G, carry);
         $display("-------------------------");
         
-        // Test Case 15
+        // Test Case 15: Adding zero and four with S0=1, S1=0
+        // A is zero, B is non-zero, S0 = 1, S1 = 0
+        // Expected output: G = 100, Carry = 0
         A = 3'b000;
         B = 3'b100;
         S0 = 1'b1;
@@ -240,7 +270,9 @@ module testbench;
         $display("Output: G = %b, Carry = %b", G, carry);
         $display("-------------------------");
         
-        // Test Case 16
+        // Test Case 16: Adding zero and five with S0=1, S1=0
+        // A is zero, B is non-zero, S0 = 1, S1 = 0
+        // Expected output: G = 101, Carry = 0
         A = 3'b000;
         B = 3'b101;
         S0 = 1'b1;
@@ -250,7 +282,9 @@ module testbench;
         $display("Output: G = %b, Carry = %b", G, carry);
         $display("-------------------------");
         
-        // Test Case 17
+        // Test Case 17: Adding one and zero with S0=1, S1=0
+        // A is non-zero, B is zero, S0 = 1, S1 = 0
+        // Expected output: G = 001, Carry = 0
         A = 3'b001;
         B = 3'b000;
         S0 = 1'b1;
@@ -260,7 +294,9 @@ module testbench;
         $display("Output: G = %b, Carry = %b", G, carry);
         $display("-------------------------");
         
-        // Test Case 18
+        // Test Case 18: Adding one and one with S0=1, S1=0
+        // Both A and B are non-zero, S0 = 1, S1 = 0
+       // Expected output: G = 010, Carry = 0
         A = 3'b001;
         B = 3'b001;
         S0 = 1'b1;
@@ -270,7 +306,9 @@ module testbench;
         $display("Output: G = %b, Carry = %b", G, carry);
         $display("-------------------------");
         
-        // Test Case 19
+        // Test Case 19: Adding one and two with S0=1, S1=0
+        // Both A and B are non-zero, S0 = 1, S1 = 0
+        // Expected output: G = 011, Carry = 0
         A = 3'b001;
         B = 3'b010;
         S0 = 1'b1;
@@ -280,7 +318,9 @@ module testbench;
         $display("Output: G = %b, Carry = %b", G, carry);
         $display("-------------------------");
         
-        // Test Case 20
+        // Test Case 20: Adding one and three with S0=1, S1=0
+        // Both A and B are non-zero, S0 = 1, S1 = 0
+        // Expected output: G = 100, Carry = 1
         A = 3'b001;
         B = 3'b011;
         S0 = 1'b1;
@@ -289,7 +329,10 @@ module testbench;
         #1;
         $display("Output: G = %b, Carry = %b", G, carry);
         $display("-------------------------");
-        // Test Case 21
+
+        // Test Case 21: Adding two zeros with S0=0, S1=1
+        // Both A and B are zero, S0 = 0, S1 = 1
+        // Expected output: G = 000, Carry = 0
         A = 3'b000;
         B = 3'b000;
         S0 = 1'b0;
@@ -299,7 +342,9 @@ module testbench;
         $display("Output: G = %b, Carry = %b", G, carry);
         $display("-------------------------");
         
-        // Test Case 22
+        // Test Case 22: Adding zero and one with S0=0, S1=1
+        // A is zero, B is non-zero, S0 = 0, S1 = 1
+        // Expected output: G = 001, Carry = 0
         A = 3'b000;
         B = 3'b001;
         S0 = 1'b0;
@@ -309,7 +354,9 @@ module testbench;
         $display("Output: G = %b, Carry = %b", G, carry);
         $display("-------------------------");
         
-        // Test Case 23
+        // Test Case 23: Adding zero and two with S0=0, S1=1
+        // A is zero, B is non-zero, S0 = 0, S1 = 1
+        // Expected output: G = 010, Carry = 0
         A = 3'b000;
         B = 3'b010;
         S0 = 1'b0;
@@ -319,7 +366,9 @@ module testbench;
         $display("Output: G = %b, Carry = %b", G, carry);
         $display("-------------------------");
         
-        // Test Case 24
+        // Test Case 24: Adding zero and three with S0=0, S1=1
+        // A is zero, B is non-zero, S0 = 0, S1 = 1
+        // Expected output: G = 011, Carry = 0
         A = 3'b000;
         B = 3'b011;
         S0 = 1'b0;
@@ -329,7 +378,9 @@ module testbench;
         $display("Output: G = %b, Carry = %b", G, carry);
         $display("-------------------------");
         
-        // Test Case 25
+        // Test Case 25: Adding zero and four with S0=0, S1=1
+        // A is zero, B is non-zero, S0 = 0, S1 = 1
+        // Expected output: G = 100, Carry = 0
         A = 3'b000;
         B = 3'b100;
         S0 = 1'b0;
@@ -339,7 +390,9 @@ module testbench;
         $display("Output: G = %b, Carry = %b", G, carry);
         $display("-------------------------");
         
-        // Test Case 26
+        // Test Case 26: Adding zero and five with S0=0, S1=1
+        // A is zero, B is non-zero, S0 = 0, S1 = 1
+        // Expected output: G = 101, Carry = 0
         A = 3'b000;
         B = 3'b101;
         S0 = 1'b0;
@@ -349,7 +402,9 @@ module testbench;
         $display("Output: G = %b, Carry = %b", G, carry);
         $display("-------------------------");
         
-        // Test Case 27
+        // Test Case 27: Adding one and zero with S0=0, S1=1
+        // A is non-zero, B is zero, S0 = 0, S1 = 1
+        // Expected output: G = 001, Carry = 0
         A = 3'b001;
         B = 3'b000;
         S0 = 1'b0;
@@ -359,7 +414,9 @@ module testbench;
         $display("Output: G = %b, Carry = %b", G, carry);
         $display("-------------------------");
         
-        // Test Case 28
+        // Test Case 28: Adding one and one with S0=0, S1=1
+        // Both A and B are non-zero, S0 = 0, S1 = 1
+        // Expected output: G = 010, Carry = 0
         A = 3'b001;
         B = 3'b001;
         S0 = 1'b0;
@@ -369,7 +426,9 @@ module testbench;
         $display("Output: G = %b, Carry = %b", G, carry);
         $display("-------------------------");
         
-        // Test Case 29
+        // Test Case 29: Adding one and two with S0=0, S1=1
+        // Both A and B are non-zero, S0 = 0, S1 = 1
+        // Expected output: G = 011, Carry = 0
         A = 3'b001;
         B = 3'b010;
         S0 = 1'b0;
@@ -379,7 +438,9 @@ module testbench;
         $display("Output: G = %b, Carry = %b", G, carry);
         $display("-------------------------");
         
-        // Test Case 30
+        // Test Case 30: Adding one and three with S0=0, S1=1
+        // Both A and B are non-zero, S0 = 0, S1 = 1
+        // Expected output: G = 100, Carry = 1
         A = 3'b001;
         B = 3'b011;
         S0 = 1'b0;
@@ -389,7 +450,9 @@ module testbench;
         $display("Output: G = %b, Carry = %b", G, carry);
         $display("-------------------------");
         
-        // Test Case 31
+        // Test Case 31: Adding two zeros with S0=1, S1=1
+        // Both A and B are zero, S0 = 1, S1 = 1
+        // Expected output: G = 000, Carry = 0
         A = 3'b000;
         B = 3'b000;
         S0 = 1'b1;
@@ -399,7 +462,9 @@ module testbench;
         $display("Output: G = %b, Carry = %b", G, carry);
         $display("-------------------------");
         
-        // Test Case 32
+        // Test Case 32: Adding zero and one with S0=1, S1=1
+        // A is zero, B is non-zero, S0 = 1, S1 = 1
+        // Expected output: G = 001, Carry = 0
         A = 3'b000;
         B = 3'b001;
         S0 = 1'b1;
@@ -409,7 +474,9 @@ module testbench;
         $display("Output: G = %b, Carry = %b", G, carry);
         $display("-------------------------");
         
-        // Test Case 33
+        // Test Case 33: Adding zero and two with S0=1, S1=1
+        // A is zero, B is non-zero, S0 = 1, S1 = 1
+        // Expected output: G = 010, Carry = 0
         A = 3'b000;
         B = 3'b010;
         S0 = 1'b1;
@@ -419,7 +486,9 @@ module testbench;
         $display("Output: G = %b, Carry = %b", G, carry);
         $display("-------------------------");
         
-        // Test Case 34
+        // Test Case 34: Adding zero and three with S0=1, S1=1
+        // A is zero, B is non-zero, S0 = 1, S1 = 1
+        // Expected output: G = 011, Carry = 0
         A = 3'b000;
         B = 3'b011;
         S0 = 1'b1;
@@ -429,7 +498,9 @@ module testbench;
         $display("Output: G = %b, Carry = %b", G, carry);
         $display("-------------------------");
         
-        // Test Case 35
+        // Test Case 35: Adding zero and four with S0=1, S1=1
+        // A is zero, B is non-zero, S0 = 1, S1 = 1
+        // Expected output: G = 100, Carry = 0
         A = 3'b000;
         B = 3'b100;
         S0 = 1'b1;
@@ -439,7 +510,9 @@ module testbench;
         $display("Output: G = %b, Carry = %b", G, carry);
         $display("-------------------------");
         
-        // Test Case 36
+        // Test Case 36: Adding zero and five with S0=1, S1=1
+        // A is zero, B is non-zero, S0 = 1, S1 = 1
+        // Expected output: G = 101, Carry = 0
         A = 3'b000;
         B = 3'b101;
         S0 = 1'b1;
@@ -449,7 +522,9 @@ module testbench;
         $display("Output: G = %b, Carry = %b", G, carry);
         $display("-------------------------");
         
-        // Test Case 37
+        // Test Case 37: Adding one and zero with S0=1, S1=1
+        // A is non-zero, B is zero, S0 = 1, S1 = 1
+        // Expected output: G = 001, Carry = 0
         A = 3'b001;
         B = 3'b000;
         S0 = 1'b1;
@@ -459,7 +534,9 @@ module testbench;
         $display("Output: G = %b, Carry = %b", G, carry);
         $display("-------------------------");
         
-        // Test Case 38
+        // Test Case 38: Adding one and one with S0=1, S1=1
+        // Both A and B are non-zero, S0 = 1, S1 = 1
+        // Expected output: G = 010, Carry = 0
         A = 3'b001;
         B = 3'b001;
         S0 = 1'b1;
@@ -469,7 +546,9 @@ module testbench;
         $display("Output: G = %b, Carry = %b", G, carry);
         $display("-------------------------");
         
-        // Test Case 39
+        // Test Case 39: Adding one and two with S0=1, S1=1
+        // Both A and B are non-zero, S0 = 1, S1 = 1
+        // Expected output: G = 011, Carry = 0
         A = 3'b001;
         B = 3'b010;
         S0 = 1'b1;
@@ -479,7 +558,9 @@ module testbench;
         $display("Output: G = %b, Carry = %b", G, carry);
         $display("-------------------------");
         
-        // Test Case 40
+        // Test Case 40: Adding one and three with S0=1, S1=1
+        // Both A and B are non-zero, S0 = 1, S1 = 1
+        // Expected output: G = 100, Carry = 1
         A = 3'b001;
         B = 3'b011;
         S0 = 1'b1;
