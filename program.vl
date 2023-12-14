@@ -21,10 +21,17 @@ endmodule
 module FourxOneMUX(output res, input D0, input D1, input D2, input D3, input S0, input S1);
     // Wires to transfer values from one component to another
     wire res1, res2, res3, res4;
+    // AND gates for different input combinations
+    // res1 represents the result when S0=0 and S1=0, using D0
     and(res1, D0, ~S0, ~S1); // 0 0
+    // res2 represents the result when S0=1 and S1=0, using D1
     and(res2, D1, S0, ~S1); // 0 1
+    // res3 represents the result when S0=0 and S1=1, using D2
     and(res3, D2, ~S0, S1); // 1 0
+    // res4 represents the result when S0=1 and S1=1, using D3
     and(res4, D3, S0, S1); // 1 1
+    // OR gate to combine the results from AND gates
+    // The final result (res) is the logical OR of all AND gate outputs (res1, res2, res3, res4)
     or(res, res1, res2, res3, res4);
 endmodule
 
@@ -33,28 +40,46 @@ endmodule
 module mainCircuit(output signed[2:0] G, output carry, input signed[2:0] A, input signed[2:0] B, input S0, input S1);
     // Wires to transfer values from one component to another
     wire mux1Output, mux2Output, mux3Output, mux4Output, mux5Output, mux6Output;
-    wire xor1Output, xor2Output, xor3Output; 
+    wire xor1Output, xor2Output, xor3Output;
     wire c1, c2;
 
     // First, We Choose From A[0] and B[0] depending on the selectors
-    // if S0 & S1 are equal to 1 then output B[0] which is the first bit of 'B', Otherwise output A[0] 
+    // if S0 & S1 are equal to 1 then output B[0] which is the first bit of 'B', Otherwise output A[0]
     // Then store that output in mux1Output
     FourxOneMUX mux1(mux1Output, A[0], A[0], A[0], B[0], S0, S1);
+    // xor S1 with mux1Output and store the output in xor1Output
     assign xor1Output = S1 ^ mux1Output;
-
+    // if S0 & S1 are equal to 1 then output B[1] which is the first bit of 'B', Otherwise output A[1]
+    // Then store that output in mux2Output
     FourxOneMUX mux2(mux2Output, A[1], A[1], A[1], B[1], S0, S1);
+    // xor S1 with mux2Output and store the output in xor2Output
     assign xor2Output = S1 ^ mux2Output;
-
+    // if S0 & S1 are equal to 1 then output B[2] which is the first bit of 'B', Otherwise output A[2]
+    // Then store that output in mux3Output
     FourxOneMUX mux3(mux3Output, A[2], A[2], A[2], B[2], S0, S1);
+    // xor S1 with mux3Output and store the output in xor3Output
     assign xor3Output = S1 ^ mux3Output;
-    
+    // if S0 & S1 are the same then the output is 1
+    // if S0 & S1 are  different then the output B[0]
+    // Then store that output in mux4Output
     FourxOneMUX mux4(mux4Output, 1'b1, B[0], B[0], 1'b1, S0, S1);
+    // if S0 & S1 are the same then the output is 0
+    // otherwise the output B[1]
+    // Then store that output in mux5Output
     FourxOneMUX mux5(mux5Output, 1'b0, B[1], B[1], 1'b0, S0, S1);
+    // if S0 & S1 are the same then the output is 0
+    // otherwise the output B[2]
+    // Then store that output in mux6Output
     FourxOneMUX mux6(mux6Output, 1'b0, B[2], B[2], 1'b0, S0, S1);
-
     // (output sum, output carry, input x, input y, input z);
+    // Full Adder 1: sum (xor1Output, mux4Output, S1)
+    // output G[0], c1
     full_adder f1(G[0], c1, xor1Output, mux4Output, S1);
+    // Full Adder 2: sum (xor2Output, mux5Output, c1)
+    // output G[1], c2
     full_adder f2(G[1], c2, xor2Output, mux5Output, c1);
+    // Full Adder 3: sum (xor3Output, mux6Output, c2)
+    // output G[2], carry
     full_adder f3(G[2], carry, xor3Output, mux6Output, c2);
 endmodule
 
