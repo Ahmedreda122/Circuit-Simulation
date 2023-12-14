@@ -1,5 +1,3 @@
-// We've Used 12 Component as following => Six 4x1 multiplexers, Three xor gates, Three full adders
-
 // Half Adder (Adding one bit to another) and Returning the sum of them and the carry
 module half_adder(output sum, output carry, input a, input b);
     // First Adding a & b by xoring them and store the result in "sum" as an output
@@ -8,7 +6,7 @@ module half_adder(output sum, output carry, input a, input b);
     and(carry, a, b);
 endmodule
 
-// FullAdder: Adding three bits and returing the result as "sum" and "carry"
+// Full Adder: Adding three bits and returning the result as "sum" and "carry"
 module full_adder(output sum, output carry, input x, input y, input z);
     // Wires to transfer values from one component to another
     wire s1, c1, c2;
@@ -16,30 +14,30 @@ module full_adder(output sum, output carry, input x, input y, input z);
     half_adder h1(s1, c1, x, y);
     // Second, Add s1(result of adding x & y) to z using half adder the store the summation and carry in "sum"(as an output) & "c2" respectively
     half_adder h2(sum, c2, s1, z);
-    // Lastly, Calculate the carry of adding x ,y and z by ORing c1 & c2 and store the result in "carry" as an output
+    // Lastly, Calculate the carry of adding x, y, and z by ORing c1 & c2 and store the result in "carry" as an output
     or(carry, c1, c2);
 endmodule
 
 module FourxOneMUX(output res, input D0, input D1, input D2, input D3, input S0, input S1);
-// Wires to transfer values from one component to another
+    // Wires to transfer values from one component to another
     wire res1, res2, res3, res4;
     and(res1, D0, ~S0, ~S1); // 0 0
-    and(res2, D1, S0, ~S1); //  0 1
-    and(res3, D2, ~S0, S1); //  1 0
-    and(res4, D3, S0, S1); //   1 1
+    and(res2, D1, S0, ~S1); // 0 1
+    and(res3, D2, ~S0, S1); // 1 0
+    and(res4, D3, S0, S1); // 1 1
     or(res, res1, res2, res3, res4);
 endmodule
 
-// The Main Circuit which take the G as 3 bit output and provide a carry
-// Takes A, B which is 3 bit signed numbers, S0, S1 the selectors to operations
+// The Main Circuit which takes G as a 3-bit output and provides a carry
+// Takes A, B which are 3-bit signed numbers, S0, S1 the selectors for operations
 module mainCircuit(output signed[2:0] G, output carry, input signed[2:0] A, input signed[2:0] B, input S0, input S1);
     // Wires to transfer values from one component to another
     wire mux1Output, mux2Output, mux3Output, mux4Output, mux5Output, mux6Output;
-    wire xor1Output, xor2Ouput, xor3Ouput; 
+    wire xor1Output, xor2Output, xor3Output; 
     wire c1, c2;
 
-    // First We Choose From A[0] and B[0] depending on the selectors
-    // if S0 & S1 are equal to 1 then outputs B[0] which is the first bit of 'B', Otherwise outputs A[0] 
+    // First, We Choose From A[0] and B[0] depending on the selectors
+    // if S0 & S1 are equal to 1 then output B[0] which is the first bit of 'B', Otherwise output A[0] 
     // Then store that output in mux1Output
     FourxOneMUX mux1(mux1Output, A[0], A[0], A[0], B[0], S0, S1);
     assign xor1Output = S1 ^ mux1Output;
@@ -53,7 +51,8 @@ module mainCircuit(output signed[2:0] G, output carry, input signed[2:0] A, inpu
     FourxOneMUX mux4(mux4Output, 1'b1, B[0], B[0], 1'b1, S0, S1);
     FourxOneMUX mux5(mux5Output, 1'b0, B[1], B[1], 1'b0, S0, S1);
     FourxOneMUX mux6(mux6Output, 1'b0, B[2], B[2], 1'b0, S0, S1);
-    //(output sum, output carry, input x, input y, input z);
+
+    // (output sum, output carry, input x, input y, input z);
     full_adder f1(G[0], c1, xor1Output, mux4Output, S1);
     full_adder f2(G[1], c2, xor2Output, mux5Output, c1);
     full_adder f3(G[2], carry, xor3Output, mux6Output, c2);
@@ -74,12 +73,12 @@ module testbench;
 
     // Instantiate the mainCircuit module
     mainCircuit dut (
-        .G(G),
-        .carry(carry),
-        .A(A),
-        .B(B),
-        .S0(S0),
-        .S1(S1)
+      .G(G),
+      .carry(carry),
+      .A(A),
+      .B(B),
+      .S0(S0),
+      .S1(S1)
     );
 
     // Clock generation
@@ -89,30 +88,411 @@ module testbench;
     // Test stimulus
     initial begin
         $display("Testing mainCircuit module");
-        $display("-------------------------");
+    $display("-------------------------");
 
-        // Loop for different test cases
-        repeat(40) begin
-            // Assign test values to inputs A and B
-            A = $random;
-            B = $random;
-            S0 = $random;
-            S1 = $random;
+    // Test Case 1
+    A = 3'b000;
+    B = 3'b000;
+    S0 = 0;
+    S1 = 0;
+    $display("Test Case 1: A = %b, B = %b, S1 = %b, S0 = %b", A, B, S1, S0);
+    #1;
+    $display("Output: G = %b, Carry = %b", G, carry);
+    $display("-------------------------");
 
-            // Display input values
-            $display("Input: A = %b, B = %b, S1 = %b, S0 = %b", A, B, S1, S0);
+    // Test Case 2
+    A = 3'b000;
+    B = 3'b001;
+    S0 = 0;
+    S1 = 0;
+    $display("Test Case 2: A = %b, B = %b, S1 = %b, S0 = %b", A, B, S1, S0);
+    #1;
+    $display("Output: G = %b, Carry = %b", G, carry);
+    $display("-------------------------");
 
-            // Apply inputs
-            #1;
+   
+    // Test Case 3
+    A = 3'b000;
+    B = 3'b010;
+    S0 = 0;
+    S1 = 0;
+    $display("Test Case 3: A = %b, B = %b, S1 = %b, S0 = %b", A, B, S1, S0);
+    #1;
+    $display("Output: G = %b, Carry = %b", G, carry);
+    $display("-------------------------");
 
-            // Display output values
-            $display("Output: G = %b, Carry = %b", G, carry);
-            $display("-------------------------");
+    // Test Case 4
+    A = 3'b000;
+    B = 3'b011;
+    S0 = 0;
+    S1 = 0;
+    $display("Test Case 4: A = %b, B = %b, S1 = %b, S0 = %b", A, B, S1, S0);
+    #1;
+    $display("Output: G = %b, Carry = %b", G, carry);
+    $display("-------------------------");
 
-            // Wait before next test case
-            #10;
-        end
-        // End simulation
-        $finish;
-    end
+    // Test Case 5
+    A = 3'b000;
+    B = 3'b100;
+    S0 = 0;
+    S1 = 0;
+    $display("Test Case 5: A = %b, B = %b, S1 = %b, S0 = %b", A, B, S1, S0);
+    #1;
+    $display("Output: G = %b, Carry = %b", G, carry);
+    $display("-------------------------");
+
+    // Test Case 6
+    A = 3'b000;
+    B = 3'b101;
+    S0 = 0;
+    S1 = 0;
+    $display("Test Case 6: A = %b, B = %b, S1 = %b, S0 = %b", A, B, S1, S0);
+    #1;
+    $display("Output: G = %b, Carry = %b", G, carry);
+    $display("-------------------------");
+
+    // Test Case 7
+    A = 3'b001;
+    B = 3'b000;
+    S0 = 0;
+    S1 = 0;
+    $display("Test Case 7: A = %b, B = %b, S1 = %b, S0 = %b", A, B, S1, S0);
+    #1;
+    $display("Output: G = %b, Carry = %b", G, carry);
+    $display("-------------------------");
+
+    // Test Case 8
+    A = 3'b001;
+    B = 3'b001;
+    S0 = 0;
+    S1 = 0;
+    $display("Test Case 8: A = %b, B = %b, S1 = %b, S0 = %b", A, B, S1, S0);
+    #1;
+    $display("Output: G = %b, Carry = %b", G, carry);
+    $display("-------------------------");
+
+    // Test Case 9
+    A = 3'b001;
+    B = 3'b010;
+    S0 = 0;
+    S1 = 0;
+    $display("Test Case 9: A = %b, B = %b, S1 = %b, S0 = %b", A, B, S1, S0);
+    #1;
+    $display("Output: G = %b, Carry = %b", G, carry);
+    $display("-------------------------");
+
+    // Test Case 10
+    A = 3'b001;
+    B = 3'b011;
+    S0 = 1;
+    S1 = 0;
+    $display("Test Case 10: A = %b, B = %b, S1 = %b, S0 = %b", A, B, S1, S0);
+    #1;
+    $display("Output: G = %b, Carry = %b", G, carry);
+    $display("-------------------------");
+        // Test Case 11
+    A = 3'b000;
+    B = 3'b000;
+    S0 = 1;
+    S1 = 0;
+    $display("Test Case 1: A = %b, B = %b, S1 = %b, S0 = %b", A, B, S1, S0);
+    #1;
+    $display("Output: G = %b, Carry = %b", G, carry);
+    $display("-------------------------");
+
+    // Test Case 12
+    A = 3'b000;
+    B = 3'b001;
+    S0 = 1;
+    S1 = 0;
+    $display("Test Case 2: A = %b, B = %b, S1 = %b, S0 = %b", A, B, S1, S0);
+    #1;
+    $display("Output: G = %b, Carry = %b", G, carry);
+    $display("-------------------------");
+
+   
+    // Test Case 13
+    A = 3'b000;
+    B = 3'b010;
+    S0 = 1;
+    S1 = 0;
+    $display("Test Case 3: A = %b, B = %b, S1 = %b, S0 = %b", A, B, S1, S0);
+    #1;
+    $display("Output: G = %b, Carry = %b", G, carry);
+    $display("-------------------------");
+
+    // Test Case 14
+    A = 3'b000;
+    B = 3'b011;
+    S0 = 1;
+    S1 = 0;
+    $display("Test Case 4: A = %b, B = %b, S1 = %b, S0 = %b", A, B, S1, S0);
+    #1;
+    $display("Output: G = %b, Carry = %b", G, carry);
+    $display("-------------------------");
+
+    // Test Case 15
+    A = 3'b000;
+    B = 3'b100;
+    S0 = 1;
+    S1 = 0;
+    $display("Test Case 5: A = %b, B = %b, S1 = %b, S0 = %b", A, B, S1, S0);
+    #1;
+    $display("Output: G = %b, Carry = %b", G, carry);
+    $display("-------------------------");
+
+    // Test Case 16
+    A = 3'b000;
+    B = 3'b101;
+    S0 = 1;
+    S1 = 0;
+    $display("Test Case 6: A = %b, B = %b, S1 = %b, S0 = %b", A, B, S1, S0);
+    #1;
+    $display("Output: G = %b, Carry = %b", G, carry);
+    $display("-------------------------");
+
+    // Test Case 17
+    A = 3'b001;
+    B = 3'b000;
+    S0 = 1;
+    S1 = 0;
+    $display("Test Case 7: A = %b, B = %b, S1 = %b, S0 = %b", A, B, S1, S0);
+    #1;
+    $display("Output: G = %b, Carry = %b", G, carry);
+    $display("-------------------------");
+
+    // Test Case 18
+    A = 3'b001;
+    B = 3'b001;
+    S0 = 1;
+    S1 = 0;
+    $display("Test Case 8: A = %b, B = %b, S1 = %b, S0 = %b", A, B, S1, S0);
+    #1;
+    $display("Output: G = %b, Carry = %b", G, carry);
+    $display("-------------------------");
+
+    // Test Case 19
+    A = 3'b001;
+    B = 3'b010;
+    S0 = 1;
+    S1 = 0;
+    $display("Test Case 9: A = %b, B = %b, S1 = %b, S0 = %b", A, B, S1, S0);
+    #1;
+    $display("Output: G = %b, Carry = %b", G, carry);
+    $display("-------------------------");
+
+    // Test Case 20
+    A = 3'b001;
+    B = 3'b011;
+    S0 = 1;
+    S1 = 0;
+    $display("Test Case 10: A = %b, B = %b, S1 = %b, S0 = %b", A, B, S1, S0);
+    #1;
+    $display("Output: G = %b, Carry = %b", G, carry);
+    $display("-------------------------");
+        // Test Case 21
+    A = 3'b000;
+    B = 3'b000;
+    S0 = 0;
+    S1 = 1;
+    $display("Test Case 1: A = %b, B = %b, S1 = %b, S0 = %b", A, B, S1, S0);
+    #1;
+    $display("Output: G = %b, Carry = %b", G, carry);
+    $display("-------------------------");
+
+    // Test Case 22
+    A = 3'b000;
+    B = 3'b001;
+    S0 = 0;
+    S1 = 1;
+    $display("Test Case 2: A = %b, B = %b, S1 = %b, S0 = %b", A, B, S1, S0);
+    #1;
+    $display("Output: G = %b, Carry = %b", G, carry);
+    $display("-------------------------");
+
+   
+    // Test Case 23
+    A = 3'b000;
+    B = 3'b010;
+    S0 = 0;
+    S1 = 1;
+    $display("Test Case 3: A = %b, B = %b, S1 = %b, S0 = %b", A, B, S1, S0);
+    #1;
+    $display("Output: G = %b, Carry = %b", G, carry);
+    $display("-------------------------");
+
+    // Test Case 24
+    A = 3'b000;
+    B = 3'b011;
+    S0 = 0;
+    S1 = 1;
+    $display("Test Case 4: A = %b, B = %b, S1 = %b, S0 = %b", A, B, S1, S0);
+    #1;
+    $display("Output: G = %b, Carry = %b", G, carry);
+    $display("-------------------------");
+
+    // Test Case 25
+    A = 3'b000;
+    B = 3'b100;
+    S0 = 0;
+    S1 = 1;
+    $display("Test Case 5: A = %b, B = %b, S1 = %b, S0 = %b", A, B, S1, S0);
+    #1;
+    $display("Output: G = %b, Carry = %b", G, carry);
+    $display("-------------------------");
+
+    // Test Case 26
+    A = 3'b000;
+    B = 3'b101;
+    S0 = 0;
+    S1 = 1;
+    $display("Test Case 6: A = %b, B = %b, S1 = %b, S0 = %b", A, B, S1, S0);
+    #1;
+    $display("Output: G = %b, Carry = %b", G, carry);
+    $display("-------------------------");
+
+    // Test Case 27
+    A = 3'b001;
+    B = 3'b000;
+    S0 = 0;
+    S1 = 1;
+    $display("Test Case 7: A = %b, B = %b, S1 = %b, S0 = %b", A, B, S1, S0);
+    #1;
+    $display("Output: G = %b, Carry = %b", G, carry);
+    $display("-------------------------");
+
+    // Test Case 28
+    A = 3'b001;
+    B = 3'b001;
+    S0 = 0;
+    S1 = 1;
+    $display("Test Case 8: A = %b, B = %b, S1 = %b, S0 = %b", A, B, S1, S0);
+    #1;
+    $display("Output: G = %b, Carry = %b", G, carry);
+    $display("-------------------------");
+
+    // Test Case 29
+    A = 3'b001;
+    B = 3'b010;
+    S0 = 0;
+    S1 = 1;
+    $display("Test Case 9: A = %b, B = %b, S1 = %b, S0 = %b", A, B, S1, S0);
+    #1;
+    $display("Output: G = %b, Carry = %b", G, carry);
+    $display("-------------------------");
+
+    // Test Case 30
+    A = 3'b001;
+    B = 3'b011;
+    S0 = 0;
+    S1 = 1;
+    $display("Test Case 10: A = %b, B = %b, S1 = %b, S0 = %b", A, B, S1, S0);
+    #1;
+    $display("Output: G = %b, Carry = %b", G, carry);
+    $display("-------------------------");
+
+ 
+    // Test Case 31
+    A = 3'b000;
+    B = 3'b000;
+    S0 = 1;
+    S1 = 1;
+    $display("Test Case 1: A = %b, B = %b, S1 = %b, S0 = %b", A, B, S1, S0);
+    #1;
+    $display("Output: G = %b, Carry = %b", G, carry);
+    $display("-------------------------");
+
+    // Test Case 32
+    A = 3'b000;
+    B = 3'b001;
+    S0 = 1;
+    S1 = 1;
+    $display("Test Case 2: A = %b, B = %b, S1 = %b, S0 = %b", A, B, S1, S0);
+    #1;
+    $display("Output: G = %b, Carry = %b", G, carry);
+    $display("-------------------------");
+
+   
+    // Test Case 33
+    A = 3'b000;
+    B = 3'b010;
+    S0 = 1;
+    S1 = 1;
+    $display("Test Case 3: A = %b, B = %b, S1 = %b, S0 = %b", A, B, S1, S0);
+    #1;
+    $display("Output: G = %b, Carry = %b", G, carry);
+    $display("-------------------------");
+
+    // Test Case 34
+    A = 3'b000;
+    B = 3'b011;
+    S0 = 1;
+    S1 = 1;
+    $display("Test Case 4: A = %b, B = %b, S1 = %b, S0 = %b", A, B, S1, S0);
+    #1;
+    $display("Output: G = %b, Carry = %b", G, carry);
+    $display("-------------------------");
+
+    // Test Case 35
+    A = 3'b000;
+    B = 3'b100;
+    S0 = 1;
+    S1 = 1;
+    $display("Test Case 5: A = %b, B = %b, S1 = %b, S0 = %b", A, B, S1, S0);
+    #1;
+    $display("Output: G = %b, Carry = %b", G, carry);
+    $display("-------------------------");
+
+    // Test Case 36
+    A = 3'b000;
+    B = 3'b101;
+    S0 = 1;
+    S1 = 1;
+    $display("Test Case 6: A = %b, B = %b, S1 = %b, S0 = %b", A, B, S1, S0);
+    #1;
+    $display("Output: G = %b, Carry = %b", G, carry);
+    $display("-------------------------");
+
+    // Test Case 37
+    A = 3'b001;
+    B = 3'b000;
+    S0 = 1;
+    S1 = 1;
+    $display("Test Case 7: A = %b, B = %b, S1 = %b, S0 = %b", A, B, S1, S0);
+    #1;
+    $display("Output: G = %b, Carry = %b", G, carry);
+    $display("-------------------------");
+
+    // Test Case 38
+    A = 3'b001;
+    B = 3'b001;
+    S0 = 1;
+    S1 = 1;
+    $display("Test Case 8: A = %b, B = %b, S1 = %b, S0 = %b", A, B, S1, S0);
+    #1;
+    $display("Output: G = %b, Carry = %b", G, carry);
+    $display("-------------------------");
+
+    // Test Case 39
+    A = 3'b001;
+    B = 3'b010;
+    S0 = 1;
+    S1 = 1;
+    $display("Test Case 9: A = %b, B = %b, S1 = %b, S0 = %b", A, B, S1, S0);
+    #1;
+    $display("Output: G = %b, Carry = %b", G, carry);
+    $display("-------------------------");
+
+    // Test Case 40
+    A = 3'b001;
+    B = 3'b011;
+    S0 = 1;
+    S1 = 1;
+    $display("Test Case 10: A = %b, B = %b, S1 = %b, S0 = %b", A, B, S1, S0);
+    #1;
+    $display("Output: G = %b, Carry = %b", G, carry);
+    $display("-------------------------");
+
+    end 
+
 endmodule
